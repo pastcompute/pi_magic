@@ -8,7 +8,6 @@
 #
 # pi_qemu_build.sh -f /scratch/rpi/2013-02-09-wheezy-raspbian.img /scratch/rpi/hda1.qcow2
 #
-#
 
 SUDO=sudo
 
@@ -45,14 +44,17 @@ QNDB=/dev/nbd0
 LOOP=
 
 function cleanup() {
+  set +e
   grep $CHROOT /proc/mounts && $SUDO umount $CHROOT
   $SUDO rm -rf $WORKING
-  $SUDO losetup -d $LOOP
+  test -z $LOOP || $SUDO losetup -d $LOOP
   $SUDO qemu-nbd -d $QNDB
 }
 
 trap cleanup 0
 
+set -x
+set -e
 $SUDO modprobe nbd
 $SUDO qemu-nbd -c $QNDB "$DEST_DISK" || exit 1
 
@@ -68,7 +70,9 @@ echo "Root Partition Start=$START Offset=$OFFSET Disk=$LENGTH"
 # Extend sda2 out to nd of image
 #$SUDO /sbin/parted -s $QNDB unit s move 2 $START $(( $LENGTH - 1 ))
 # My (wheezy, 2.3) version of parted is stupid and wont even change the bounds of a partition 
+set +e # ignore error creating partition 2
 $SUDO /sbin/parted -s $QNDB unit s rm 2 mkpart primary ext2 $START $(( $LENGTH - 1 ))
+set -e
 $SUDO /sbin/parted -s $QNDB unit s print
 
 LOOP=`$SUDO losetup -o $OFFSET -f --show $QNDB`
@@ -99,6 +103,8 @@ EOF
 $SUDO install $WORKING/90-qemu.rules -m 644 $CHROOT/etc/udev/rules.d/90-qemu.rules
 
 cleanup
+
+trap - 0
 
 # Make a snapshot to use, using the base as a backing file.
 qemu-img create -f qcow2 -o backing_file=$DEST_DISK $SNAPSHOT
