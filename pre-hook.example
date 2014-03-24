@@ -1,0 +1,11 @@
+# PRE_HOOK_SCRIPT
+#
+# Create & mount a ramdisk to minimise SD-card traffic
+# Copy local mirror of previously saved debian packages
+
+CACHE_DEST=/var/cache/apt/archives
+
+ssh -p $PI_PORT ${PI_USER}@${PI_SSH_HOST} sudo mkdir -p $CACHE_DEST
+ssh -p $PI_PORT ${PI_USER}@${PI_SSH_HOST} "grep -q $CACHE_DEST /proc/mounts || sudo mount -t tmpfs tmpfs $CACHE_DEST"
+rsync -e "ssh -p $PI_PORT" -av /scratch/rpi/apt-cache/*.deb ${PI_USER}@${PI_SSH_HOST}:$CACHE_DEST
+

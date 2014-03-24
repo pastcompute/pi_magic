@@ -1,0 +1,11 @@
+# POST_HOOK_SCRIPT
+# Generate ssh key and push back to host
+# Then update latest archive
+# Finally, reboot the guest
+
+ssh -p $PI_PORT ${PI_USER}@${PI_SSH_HOST} "ssh-keygen -f \$HOME/.ssh/id_rsa -N ''"
+ssh-keygen -R ${PI_HOSTNAME}
+ssh -p $PI_PORT ${PI_USER}@${PI_SSH_HOST} "cat \$HOME/.ssh/id_rsa.pub" >> ~/.ssh/authorized_keys
+rsync -e "ssh -p $PI_PORT" -av --exclude=partial/ --exclude=lock ${PI_USER}@${PI_SSH_HOST}:/var/cache/apt/archives/* /scratch/rpi/apt-cache/
+ssh -p $PI_PORT ${PI_USER}@${PI_SSH_HOST} sudo reboot
+
