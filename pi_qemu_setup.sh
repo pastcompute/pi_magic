@@ -23,6 +23,7 @@ PI_USER=${PI_USER:-pi}
 PI_PORT=${PI_PORT:-60022}
 PI_SSH_HOST=${PI_SSH_HOST:-localhost}
 PI_HOSTNAME=${PI_HOSTNAME:-pivm1}
+OTHER_PACKAGES="tcpdump di git gitg gkrellm $PI_OTHER_PACKAGES"
 
 SELF=$0
 
@@ -56,7 +57,7 @@ localepurge	localepurge/quickndirtycalc	boolean	true
 EOF
   DEBIAN_FRONTEND=noninteractive apt-get install -yq localepurge
   localepurge
-  DEBIAN_FRONTEND=noninteractive apt-get install -yq  sysfsutils tcpdump di git gitg gkrellm
+  DEBIAN_FRONTEND=noninteractive apt-get install -yq  sysfsutils $OTHER_PACKAGES
   echo OK.
 }
 
