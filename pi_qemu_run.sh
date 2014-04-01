@@ -21,10 +21,10 @@ qemu-img create $SWAP 1024M
 # TODO: prevent CTRL+C in serial terminal!
 
 # Map ssh on (host) localhost:60022 --> (guest) 22
-NET_SETUP="-net nic -net user,hostfwd=tcp::60022-:22"
+NET_SETUP="-net nic -net user,hostfwd=tcp::60022-:22,hostfwd=tcp::60080-:8080"
 
 qemu-system-arm -kernel $KERNEL -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio \
                 -append "root=/dev/sda2 panic=1 rootfstype=ext4 rw $APPEND_EXTRA" \
-                ${NET_SETUP} -hda $PI_DISK -hdb $SWAP
+                ${NET_SETUP} ${NET_EXTRA} -hda $PI_DISK -hdb $SWAP
 
 # Update - 
