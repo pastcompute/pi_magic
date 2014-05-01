@@ -10,4 +10,7 @@ You probably need to apt-get a bunch of stuff first.
 
 See [this article](http://xecdesign.com/qemu-emulating-raspberry-pi-the-easy-way/) [1] for what these scripts automate, and for where the kernel image comes from.
 
+Note that older Qemu may be subject to the bug described at http://www.raspberrypi.org/forums/viewtopic.php?f=66&t=65641
+
  [1] http://xecdesign.com/qemu-emulating-raspberry-pi-the-easy-way/
+

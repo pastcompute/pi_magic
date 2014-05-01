@@ -91,6 +91,7 @@ test -e $CHROOT/etc || { echo "Cannot find expected files..." && exit 1 ; }
 echo Fixing preload
 
 $SUDO sed -e '/^\/usr\/lib\/arm-linux-gnueabihf\/libcofi_rpi.so/ s/^/#/' -i $CHROOT/etc/ld.so.preload
+cat $CHROOT/etc/ld.so.preload
 
 echo Fixing mmc
 

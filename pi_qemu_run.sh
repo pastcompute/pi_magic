@@ -5,9 +5,9 @@
 #
 # Use qemu-img info snapshot.qcow2 to check it has correct backing store
 #
-KERNEL=image/kernel-qemu
+KERNEL=`dirname $0`/image/kernel-qemu
 
-SWAP=/scratch/rpi/swap1.img
+SWAP=${SWAP:-swap1.img}
 
 PI_DISK="$1"
 
